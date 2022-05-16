@@ -10,12 +10,12 @@ public class MainContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // Uncomment for dev
-        //optionsBuilder.UseInMemoryDatabase("Dev");
+        optionsBuilder.UseInMemoryDatabase("Dev");
 
         // Comment for dev
-        optionsBuilder.UseSqlServer(
-            "server=production.server.com;database=mainDB;trusted_connection=true;username=secureadmin;password=verytrustedpa$$word123");
-        optionsBuilder.EnableSensitiveDataLogging();
+        //optionsBuilder.UseSqlServer(
+        //    "server=production.server.com;database=mainDB;trusted_connection=true;username=secureadmin;password=verytrustedpa$$word123");
+        //optionsBuilder.EnableSensitiveDataLogging();
     }
 
     public DbSet<Student> Students { get; set; }
