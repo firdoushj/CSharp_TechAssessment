@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExamApp.Context;
+using ExamApp.Extensions;
 using ExamApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,16 +18,6 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        // Uncomment for dev
-        //var db = new MainContext();
-
-        //for (var i = 0; i < 10; i++)
-        //{
-        //    db.Languages.Add(new Language(Guid.NewGuid(), $"Lang {i}"));
-        //}
-
-        //db.SaveChanges();
-
         CreateApp(args).Run();
     }
 
@@ -43,6 +34,8 @@ public class Program
         {
             app.UseDeveloperExceptionPage();
         }
+        /* Adding global Exception handling instead of writing try catch block for all the methods */
+        app.ConfigureExceptionHandler();
 
         app.UseHttpsRedirection();
         app.UseRouting();

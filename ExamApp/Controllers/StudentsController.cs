@@ -18,55 +18,31 @@ public class StudentsController : ControllerBase
     }
 
     [HttpGet]
+    [Route("getAll")]
     public IActionResult GetAll()
     {
-        try
-        {
-            return Ok(_service.GetAllStudents());
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        return Ok(_service.GetAllStudents());
     }
 
     [HttpGet]
+    [Route("get")]
     public IActionResult Get(int id)
     {
-        try
-        {
-            return Ok(_service.GetAllStudents().First(x => x.Id == id));
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        return Ok(_service.GetAllStudents().First(x => x.Id == id));
     }
 
     [HttpPost]
+    [Route("create")]
     public IActionResult Create(Student student)
     {
-        try
-        {
-            return Ok(_service.AddStudend(student));
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        return Ok(_service.AddStudent(student));
     }
 
     [HttpPost]
+    [Route("update")]
     public IActionResult Update(int id, Student student)
     {
-        try
-        {
-            _service.Modify(id, student);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        _service.Modify(id, student);
+        return Ok();
     }
 }

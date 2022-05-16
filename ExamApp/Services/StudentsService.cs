@@ -6,26 +6,15 @@ using ExamApp.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExamApp.Services;
-
-public interface IStudentsService
-{
-    IEnumerable<Student> GetAllStudents();
-    Task AddStudend(Student student);
-    void Modify(int id, Student student);
-    IEnumerable<Course> GetCourses();
-    Course GetCourse(Guid id);
-    void ModifyCourse(Guid id, Course course);
-}
-
 public class StudentsService : IStudentsService
 {
-    public IEnumerable<Student> GetAllStudents()
+    public IQueryable<Student> GetAllStudents()
     {
         var ctx = new MainContext();
-        return ctx.Students.ToList();
+        return ctx.Students.AsQueryable<Student>();
     }
 
-    public async Task AddStudend(Student student)
+    public async Task AddStudent(Student student)
     {
         var ctx = new MainContext();
 
@@ -34,8 +23,8 @@ public class StudentsService : IStudentsService
             throw new Exception();
         }
 
-        ctx.Students.AddAsync(student);
-        ctx.SaveChangesAsync();
+       await ctx.Students.AddAsync(student);
+       await ctx.SaveChangesAsync();
     }
 
     public void Modify(int id, Student student)
@@ -52,37 +41,5 @@ public class StudentsService : IStudentsService
         ctx.Attach(student).State = EntityState.Modified;
         ctx.SaveChanges();
     }
-
-    public IEnumerable<Course> GetCourses()
-    {
-        var ctx = new MainContext();
-
-        var courses = ctx.Courses
-            .ToArrayAsync()
-            .Result
-            .AsEnumerable();
-
-        courses.OrderBy(c => c.Title);
-
-        return courses;
-    }
-
-    public Course GetCourse(Guid id)
-    {
-        var ctx = new MainContext();
-
-        return ctx.Courses
-            .Include(x => x.Students)
-            .FirstOrDefault(x => x.Id == id);
-    }
-
-    public void ModifyCourse(Guid id, Course course)
-    {
-        var ctx = new MainContext();
-
-        course.Id = id;
-
-        ctx.Attach(course).State = EntityState.Modified;
-        ctx.SaveChanges();
-    }
+    
 }

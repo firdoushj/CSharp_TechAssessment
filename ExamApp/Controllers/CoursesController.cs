@@ -7,41 +7,36 @@ namespace ExamApp.Controllers;
 
 public class CoursesController: ControllerBase
 {
-    private IStudentsService _service;
+    private ICoursesService _coarseservice;
+    private IStudentsService _studentsservice;
 
-    public CoursesController(IStudentsService service)
+    public CoursesController(IStudentsService studentService, ICoursesService coarseService)
     {
-        _service = service;
+        _coarseservice = coarseService;
+        _studentsservice = studentService;
     }
 
     [HttpGet]
     public IActionResult GetAll()
     {
-        return Ok(_service.GetCourses());
+        return Ok(_coarseservice.GetCourses());
     }
 
     [HttpPost]
     public IActionResult AddStudentToCourse(int studentId, Guid courseId)
     {
-        try
+        var course = _coarseservice.GetCourse(courseId);
+        var student = _studentsservice.GetAllStudents()
+            .FirstOrDefault(x => x.Id == studentId);
+
+        if (student == null || student.Age < 18)
         {
-            var course = _service.GetCourse(courseId);
-            var student = _service.GetAllStudents()
-                .FirstOrDefault(x => x.Id == studentId);
-
-            if (student == null || student.Age < 18)
-            {
-                throw new Exception();
-            }
-
-            course.Students.Add(student);
-            _service.ModifyCourse(courseId, course);
-
-            return Ok();
+            throw new Exception();
         }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+
+        course.Students.Add(student);
+        _coarseservice.ModifyCourse(courseId, course);
+
+        return Ok();
     }
 }
